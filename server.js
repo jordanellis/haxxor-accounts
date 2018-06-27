@@ -1,22 +1,25 @@
 const express        = require('express');
+const app            = express();
+const routes		 = require('./app/routes');
+
 const MongoClient    = require('mongodb').MongoClient;
 const bodyParser     = require('body-parser');
 const db             = require('./config/db');
 
-const app            = express();
-
-const port           = 8000;
+const env = {
+	port: 8080
+};
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
 MongoClient.connect(db.url, (err, database) => {
-  if (err) return console.log(err)
+	if (err) return console.log(err);
 
-  var ourDB = database.db("pii-hackathon")
-  require('./app/routes')(app, ourDB);
+	var piiDb = database.db('pii-hackathon');
+	routes(app, piiDb);
 
-  app.listen(port, () => {
-    console.log('We are live on ' + port);
-  });
+	app.listen(env.port, () => {
+		console.log('Listening on port ' + env.port);
+	});
 
-})
+});
