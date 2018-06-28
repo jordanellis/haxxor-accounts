@@ -1,5 +1,8 @@
+const factory = require('../../ethereum/factory.js');
+const web3 = require('../../ethereum/web3.js');
+const errMsgObj = { 'error': 'An error has occurred' };
+
 module.exports = function(app, db) {
-	const errMsgObj = { 'error': 'An error has occurred' };
 
     app.get('/accounts', (req, res) => {
 		console.log('GET /accounts');
@@ -8,6 +11,7 @@ module.exports = function(app, db) {
             if (err) throw err;
             res.send(results);
         });
+
     });
 
 	app.get('/account/:accountNumber', (req, res) => {
@@ -85,4 +89,16 @@ module.exports = function(app, db) {
     		}
     	});
 	});
+};
+
+recordTransaction = async () => {
+    try {
+        const accounts = await web3.eth.getAccounts();
+        await factory.methods.createCampaign(this.state.minimumContribution)
+            .send({
+                from: accounts[0]
+            });
+    } catch (err) {
+        console.log(errMsgObj)
+    }
 };
