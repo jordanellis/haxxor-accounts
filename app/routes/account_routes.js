@@ -9,7 +9,6 @@ module.exports = function(app, db) {
 
 	app.get('/account/:accountNumber', (req, res) => {
     	const accountNumber = req.params.accountNumber;
-        console.log('attempting to get ' + accountNumber);
     	db.collection("accounts").find({accountNumber: accountNumber}, { _id:0 }).toArray(function(err, results) {
             if (err) throw err;
             res.send(results)
@@ -17,14 +16,15 @@ module.exports = function(app, db) {
  	});
 
 	app.post('/account', (req, res) => {
-    	console.log(req.body);
-    	const account = { 
-            accountNumber: req.body.accountNumber, 
-            name: req.body.name,
-            address: req.body.address,
-            phoneNumber: req.body.phoneNumber, 
-            balance: req.body.balance 
-        };
+        var account = {};
+        for (key in req.body) {
+            var data = JSON.parse(key);
+            account.accountNumber = data.accountNumber;
+            account.name = data.name;
+            account.address = data.address;
+            account.phoneNumber = data.phoneNumber;
+            account.balance = data.balance;
+        }
 		db.collection('accounts').insert(account, (err, results) => {
 			if (err) { 
 		    	res.send({ 'error': 'An error has occurred' }); 
@@ -37,13 +37,15 @@ module.exports = function(app, db) {
 	app.put('/account/:accountNumber', (req, res) => {
     	const accountNumber = req.params.accountNumber;
     	const details = { 'accountNumber': accountNumber };
-    	const account = { 
-            accountNumber: req.body.accountNumber, 
-            name: req.body.name,
-            address: req.body.address,
-            phoneNumber: req.body.phoneNumber, 
-            balance: req.body.balance 
-        };
+        var account = {};
+        for (key in req.body) {
+            var data = JSON.parse(key);
+            account.accountNumber = data.accountNumber;
+            account.name = data.name;
+            account.address = data.address;
+            account.phoneNumber = data.phoneNumber;
+            account.balance = data.balance;
+        }
     	db.collection('accounts').update(details, account, (err, result) => {
 	      	if (err) {
 	          	res.send({'error':'An error has occurred'});
@@ -54,9 +56,8 @@ module.exports = function(app, db) {
   	});
 
 	app.delete('/account/:accountNumber', (req, res) => {
-    	const accountNumber = req.params.accountNumber;
-    	const details = { 'accountNumber': accountNumber };
-    	db.collection('accounts').remove(details, (err, item) => {
+        const accountNumber = req.params.accountNumber;
+    	db.collection('accounts').remove({accountNumber: accountNumber}, (err, item) => {
       		if (err) {
         		res.send({'error':'An error has occurred'});
       		} else {
