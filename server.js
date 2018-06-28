@@ -15,11 +15,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 MongoClient.connect(db.url, (err, database) => {
 	if (err) return console.log(err);
 
-	var piiDb = database.db('pii-hackathon');
+	const piiDb = database.db('pii-hackathon');
 	routes(app, piiDb);
 
 	app.listen(env.port, () => {
 		console.log('Listening on port ' + env.port);
 	});
-
 });
