@@ -13,7 +13,7 @@ module.exports = function(app, db) {
 	app.get('/account/:accountNumber', (req, res) => {
 		console.log('/account/:accountNumber');
 
-    	const accountNumber = req.params.accountNumber;
+    	const accountNumber = req.params && req.params.accountNumber;
 
     	db.collection('accounts').find({accountNumber: accountNumber}, { _id: 0 }).toArray((err, results) => {
 			if (err) {
@@ -29,11 +29,11 @@ module.exports = function(app, db) {
 		console.log('POST /account/');
 
     	const account = {
-            accountNumber: req.body.accountNumber, 
-            name: req.body.name,
-            address: req.body.address,
-            phoneNumber: req.body.phoneNumber, 
-            balance: req.body.balance
+            accountNumber: req && req.body.accountNumber,
+            name: req && req.body.name,
+            address: req && req.body.address,
+            phoneNumber: req && req.body.phoneNumber,
+            balance: req && req.body.balance
         };
 
 		db.collection('accounts').insert(account, (err, results) => {
@@ -49,15 +49,15 @@ module.exports = function(app, db) {
 	app.put('/account/:accountNumber', (req, res) => {
 		console.log('PUT /account/:accountNumber');
 
-    	const accountNumber = req.params.accountNumber;
+    	const accountNumber = req.params && req.params.accountNumber;
     	const details = { 'accountNumber': accountNumber };
 
     	const account = {
             accountNumber: accountNumber,
-            name: req.body.name,
-            address: req.body.address,
-            phoneNumber: req.body.phoneNumber,
-            balance: req.body.balance
+            name: req && req.body.name,
+            address: req && req.body.address,
+            phoneNumber: req && req.body.phoneNumber,
+            balance: req && req.body.balance
         };
 
     	db.collection('accounts').update(details, account, (err, result) => {
@@ -73,7 +73,7 @@ module.exports = function(app, db) {
 	app.delete('/account/:accountNumber', (req, res) => {
 		console.log('DELETE /account/:accountNumber');
 
-    	const accountNumber = req.params.accountNumber;
+    	const accountNumber = req.params && req.params.accountNumber;
     	const details = { 'accountNumber': accountNumber };
 
     	db.collection('accounts').remove(details, (err, item) => {

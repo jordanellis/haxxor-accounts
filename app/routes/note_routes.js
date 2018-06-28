@@ -6,7 +6,7 @@ module.exports = function(app, db) {
 	app.get('/notes/:id', (req, res) => {
 		console.log('GET /notes/:id');
 
-		const id = req.params.id;
+		const id = req.params && req.params.id;
     	const details = { '_id': new ObjectID(id) };
 
     	db.collection('notes').findOne(details, (err, item) => {
@@ -23,8 +23,8 @@ module.exports = function(app, db) {
 		console.log('POST /notes');
 
     	const note = {
-    		text: req.body.body,
-    		title: req.body.title
+    		text: req.body && req.body.body,
+    		title: req.body && req.body.title
     	};
 
 		db.collection('notes').insert(note, (err, results) => {
@@ -40,11 +40,11 @@ module.exports = function(app, db) {
 	app.put('/notes/:id', (req, res) => {
 		console.log('GET /notes/:id');
 
-    	const id = req.params.id;
+    	const id = req.params && req.params.id;
     	const details = { '_id': new ObjectID(id) };
     	const note = {
-    		text: req.body.body,
-    		title: req.body.title
+    		text: req.body && req.body.body,
+    		title: req.body && req.body.title
     	};
 
     	db.collection('notes').update(details, note, (err, result) => {
@@ -60,7 +60,7 @@ module.exports = function(app, db) {
 	app.delete('/notes/:id', (req, res) => {
 		console.log('DELETE /notes/:id');
 
-    	const id = req.params.id;
+    	const id = req.params && req.params.id;
     	const details = { '_id': new ObjectID(id) };
 
     	db.collection('notes').remove(details, (err, item) => {
