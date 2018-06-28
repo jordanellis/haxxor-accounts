@@ -15,31 +15,23 @@ module.exports = function(app, db) {
     });
 
 	app.get('/account/:accountNumber', (req, res) => {
-		console.log('/account/:accountNumber');
-
-    	const accountNumber = req.params && req.params.accountNumber;
-
-    	db.collection('accounts').find({accountNumber: accountNumber}, { _id: 0 }).toArray((err, results) => {
-			if (err) {
-				res.send(errMsgObj);
-				throw err;
-			} else {
-            	res.send(results);
-        	}
+    	const accountNumber = req.params.accountNumber;
+    	db.collection("accounts").find({accountNumber: accountNumber}, { _id:0 }).toArray(function(err, results) {
+            if (err) throw err;
+            res.send(results)
         });
  	});
 
 	app.post('/account', (req, res) => {
-		console.log('POST /account/');
-
-    	const account = {
-            accountNumber: req && req.body.accountNumber,
-            name: req && req.body.name,
-            address: req && req.body.address,
-            phoneNumber: req && req.body.phoneNumber,
-            balance: req && req.body.balance
-        };
-
+        var account = {};
+        for (key in req.body) {
+            var data = JSON.parse(key);
+            account.accountNumber = data.accountNumber;
+            account.name = data.name;
+            account.address = data.address;
+            account.phoneNumber = data.phoneNumber;
+            account.balance = data.balance;
+        }
 		db.collection('accounts').insert(account, (err, results) => {
 			if (err) {
 				res.send(errMsgObj);
@@ -55,15 +47,15 @@ module.exports = function(app, db) {
 
     	const accountNumber = req.params && req.params.accountNumber;
     	const details = { 'accountNumber': accountNumber };
-
-    	const account = {
-            accountNumber: accountNumber,
-            name: req && req.body.name,
-            address: req && req.body.address,
-            phoneNumber: req && req.body.phoneNumber,
-            balance: req && req.body.balance
-        };
-
+        var account = {};
+        for (key in req.body) {
+            var data = JSON.parse(key);
+            account.accountNumber = data.accountNumber;
+            account.name = data.name;
+            account.address = data.address;
+            account.phoneNumber = data.phoneNumber;
+            account.balance = data.balance;
+        }
     	db.collection('accounts').update(details, account, (err, result) => {
 	      	if (err) {
 				res.send(errMsgObj);
@@ -75,18 +67,13 @@ module.exports = function(app, db) {
   	});
 
 	app.delete('/account/:accountNumber', (req, res) => {
-		console.log('DELETE /account/:accountNumber');
-
-    	const accountNumber = req.params && req.params.accountNumber;
-    	const details = { 'accountNumber': accountNumber };
-
-    	db.collection('accounts').remove(details, (err, item) => {
-    		if (err) {
-				res.send(errMsgObj);
-				throw err;
-			} else {
-    			res.send('Account ' + accountNumber + ' deleted!');
-    		}
+        const accountNumber = req.params.accountNumber;
+    	db.collection('accounts').remove({accountNumber: accountNumber}, (err, item) => {
+      		if (err) {
+        		res.send({'error':'An error has occurred'});
+      		} else {
+        		res.send('Account ' + accountNumber + ' deleted!');
+      		} 
     	});
 	});
 };
