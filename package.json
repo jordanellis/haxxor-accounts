@@ -1,19 +1,33 @@
 {
   "name": "notable",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
-    "mongodb": "^2.2.16"
+    "mongodb": "^2.2.16",
+    "fs-extra": "^5.0.0",
+    "ganache-cli": "^6.1.0",
+    "solc": "^0.4.23",
+    "truffle-hdwallet-provider": "0.0.3",
+    "web3": "^1.0.0-beta.26"
   },
   "devDependencies": {
     "nodemon": "^1.11.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jordanellis/haxxor-accounts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jordanellis/haxxor-accounts/issues"
+  },
+  "homepage": "https://github.com/jordanellis/haxxor-accounts#readme",
+  "description": ""
 }
