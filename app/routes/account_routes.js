@@ -14,7 +14,7 @@ module.exports = function(app, db) {
             if (err) throw err;
             res.send(results);
         });
-
+        recordTransaction();
     });
 
 	app.get('/account/:accountNumber', (req, res) => {
@@ -81,10 +81,12 @@ module.exports = function(app, db) {
 	});
 };
 
+jsonResponse = "test";
+
 recordTransaction = async () => {
     try {
         const accounts = await web3.eth.getAccounts();
-        await factory.methods.createCampaign(this.state.minimumContribution)
+        await factory.methods.createCampaign(jsonResponse)
             .send({
                 from: accounts[0]
             });
