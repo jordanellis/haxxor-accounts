@@ -6,7 +6,10 @@ module.exports = function(app, db) {
 
         db.collection('accounts').find({}, { _id: 0 }).toArray((err, results) => {
             if (err) throw err;
-            res.send(results);
+            maskForgottenAccounts(results).then(accounts => {
+                console.log(accounts);
+                res.send(accounts);
+            });
         });
     });
 
@@ -14,7 +17,9 @@ module.exports = function(app, db) {
     	const accountNumber = req.params.accountNumber;
     	db.collection("accounts").find({accountNumber: accountNumber}, { _id:0 }).toArray(function(err, results) {
             if (err) throw err;
-            res.send(results)
+            maskForgottenAccounts(results).then(accounts => {
+                res.send(accounts);
+            });
         });
  	});
 
@@ -64,12 +69,36 @@ module.exports = function(app, db) {
 
 	app.delete('/account/:accountNumber', (req, res) => {
         const accountNumber = req.params.accountNumber;
-    	db.collection('accounts').remove({accountNumber: accountNumber}, (err, item) => {
-      		if (err) {
-        		res.send({'error':'An error has occurred'});
-      		} else {
-        		res.send('Account ' + accountNumber + ' deleted!');
-      		} 
-    	});
+        db.collection('forget_list').insert({ 'accountNumber': accountNumber }, (err, results) => {
+            if (err) {
+                res.send(errMsgObj);
+                throw err;
+            } else {
+                res.send('Account ' + accountNumber + ' forgotten!')
+            }
+        });
 	});
+
+    var maskForgottenAccounts = function(accounts) {
+        return new Promise((resolve, reject) => {
+            let forgottenAccounts = [];
+
+            db.collection('forget_list').find({}, { _id: 0 }).toArray((err, results) => {
+                if (err) throw err;
+                forgottenAccounts = results;
+                for (var i = 0; i < accounts.length; i++) {
+                    for (var j = 0; j < forgottenAccounts.length; j++) {
+                        if (forgottenAccounts[j].accountNumber === accounts[i].accountNumber){
+                            accounts[i].accountNumber = '**REDACTED**';
+                            accounts[i].name = '**REDACTED**';
+                            accounts[i].address = '**REDACTED**';
+                            accounts[i].phoneNumber = '**REDACTED**';
+                            accounts[i].balance = '**REDACTED**';
+                        }
+                    }
+                }
+                resolve(accounts);
+            });
+        }
+    )};
 };
