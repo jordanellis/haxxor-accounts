@@ -7,6 +7,9 @@ module.exports = function(app, db) {
     app.get('/accounts', (req, res) => {
 		console.log('GET /accounts');
 
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
         db.collection('accounts').find({}, { _id: 0 }).toArray((err, results) => {
             if (err) throw err;
             res.send(results);
@@ -15,6 +18,11 @@ module.exports = function(app, db) {
     });
 
 	app.get('/account/:accountNumber', (req, res) => {
+        console.log('GET /account/:accountNumber');
+
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
     	const accountNumber = req.params.accountNumber;
     	db.collection("accounts").find({accountNumber: accountNumber}, { _id:0 }).toArray(function(err, results) {
             if (err) throw err;
@@ -24,6 +32,11 @@ module.exports = function(app, db) {
  	});
 
 	app.post('/account', (req, res) => {
+        console.log('PUT /account');
+
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
         var account = {};
         for (key in req.body) {
             var data = JSON.parse(key);
@@ -33,6 +46,7 @@ module.exports = function(app, db) {
             account.phoneNumber = data.phoneNumber;
             account.balance = data.balance;
         }
+
 		db.collection('accounts').insert(account, (err, results) => {
 			if (err) {
 				res.send(errMsgObj);
@@ -45,6 +59,9 @@ module.exports = function(app, db) {
 
 	app.put('/account/:accountNumber', (req, res) => {
 		console.log('PUT /account/:accountNumber');
+
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     	const accountNumber = req.params && req.params.accountNumber;
     	const details = { 'accountNumber': accountNumber };
@@ -68,13 +85,18 @@ module.exports = function(app, db) {
   	});
 
 	app.delete('/account/:accountNumber', (req, res) => {
+        console.log('DELETE /account/:accountNumber');
+
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
         const accountNumber = req.params.accountNumber;
     	db.collection('accounts').remove({accountNumber: accountNumber}, (err, item) => {
       		if (err) {
         		res.send({'error':'An error has occurred'});
       		} else {
         		res.send('Account ' + accountNumber + ' deleted!');
-      		} 
+      		}
     	});
 	});
 };
