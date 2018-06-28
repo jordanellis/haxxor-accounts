@@ -7,6 +7,9 @@ module.exports = function(app, db) {
     app.get('/accounts', (req, res) => {
 		console.log('GET /accounts');
 
+        res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+        res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
         db.collection('accounts').find({}, { _id: 0 }).toArray((err, results) => {
             if (err) throw err;
             res.send(results);
@@ -73,7 +76,7 @@ module.exports = function(app, db) {
         		res.send({'error':'An error has occurred'});
       		} else {
         		res.send('Account ' + accountNumber + ' deleted!');
-      		} 
+      		}
     	});
 	});
 };
