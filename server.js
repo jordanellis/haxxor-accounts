@@ -7,7 +7,7 @@ const bodyParser     = require('body-parser');
 const db             = require('./config/db');
 
 const env = {
-	port: 8000
+	port: 8080
 };
 
 app.use(bodyParser.urlencoded({ extended: true }));

@@ -4,7 +4,7 @@ contract CampaignFactory {
     address[] public deployedCampaigns;
 
     function createCampaign(string response) public {
-        address newCampaign = new Campaign(response, msg.sender);
+        address newCampaign = new Campaign(response);
         deployedCampaigns.push(newCampaign);
     }
 
@@ -16,10 +16,8 @@ contract CampaignFactory {
 contract Campaign {
     //storage variables
     string public jsonResponse;
-    address public manager;
 
-    constructor(string response, address creator) public {
-        manager = creator;
+    constructor(string response) public {
         jsonResponse = response;
     }
 }

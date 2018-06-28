@@ -1,5 +1,5 @@
-const factory = require('../../ethereum/factory.js');
-const web3 = require('../../ethereum/web3.js');
+import factory from '../../ethereum/factory';
+import web3 from '../../ethereum/web3';
 const errMsgObj = { 'error': 'An error has occurred' };
 
 module.exports = function(app, db) {
@@ -10,8 +10,8 @@ module.exports = function(app, db) {
         db.collection('accounts').find({}, { _id: 0 }).toArray((err, results) => {
             if (err) throw err;
             res.send(results);
+            recordTransaction(results.toString());
         });
-        recordTransaction();
     });
 
 	app.get('/account/:accountNumber', (req, res) => {
@@ -19,6 +19,7 @@ module.exports = function(app, db) {
     	db.collection("accounts").find({accountNumber: accountNumber}, { _id:0 }).toArray(function(err, results) {
             if (err) throw err;
             res.send(results)
+            recordTransaction(results.toString());
         });
  	});
 
@@ -78,16 +79,18 @@ module.exports = function(app, db) {
 	});
 };
 
-jsonResponse = "test";
+//let jsonResponse = "test";
 
-recordTransaction = async () => {
+async function recordTransaction(jsonResponse) {
     try {
         const accounts = await web3.eth.getAccounts();
         await factory.methods.createCampaign(jsonResponse)
             .send({
-                from: accounts[0]
+                from: accounts[0],
+                gas: 4712388
             });
+        console.log('Transaction recorded from ' + accounts[0])
     } catch (err) {
-        console.log(errMsgObj)
+        console.log(err);
     }
 };
