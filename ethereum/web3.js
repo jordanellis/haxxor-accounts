@@ -1,4 +1,4 @@
-import Web3 from 'web3';
+var Web3 = require('web3');
 
 let web3;
 
@@ -13,4 +13,4 @@ if(typeof window != 'undefined' && typeof window.web3 != 'undefined') {
   web3 = new Web3(provider);
 }
 
-export default web3;
+return web3;
