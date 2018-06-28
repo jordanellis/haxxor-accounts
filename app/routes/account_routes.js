@@ -17,7 +17,7 @@ module.exports = function(app, db) {
     });
 
 	app.get('/account/:accountNumber', (req, res) => {
-        console.log('/account/:accountNumber');
+        console.log('GET /account/:accountNumber');
 
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -83,7 +83,7 @@ module.exports = function(app, db) {
   	});
 
 	app.delete('/account/:accountNumber', (req, res) => {
-        console.log('/account/:accountNumber');
+        console.log('DELETE /account/:accountNumber');
 
         res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
         res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
